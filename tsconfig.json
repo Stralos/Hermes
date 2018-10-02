@@ -1,0 +1,22 @@
+
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "inlineSourceMap": true,
+    "baseUrl": "./",
+    "target": "es6",
+    "lib": ["es6", "dom", "esnext.asynciterable"],
+    "strict": true,
+  },
+  "include": [
+      "src/index.ts"
+  ],
+  "exclude": [
+      "node_modules",
+      "**/*.spec.ts"
+  ]
+}
