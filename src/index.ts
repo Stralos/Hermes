@@ -1,9 +1,16 @@
-// import * as schedule from 'node-schedule';
-import { RTMClient } from '@slack/client';
+import * as schedule from 'node-schedule';
+import { WebClient } from '@slack/client';
 import SLACK_KEY from '../config/keys'
-import MessageController from './controllers/MessageController';
 
-const rtm = new RTMClient(SLACK_KEY);
-rtm.start();
+const web = new WebClient(SLACK_KEY);
 
-rtm.on('message', new MessageController(rtm).handleMessage);
+async function getGeneralChatId() {
+  const result = await web.channels.list();
+  const { id } = (<any> result).channels.find((channel: any) => channel.name === 'general');
+  return id;
+};
+async function postToChannel(id: string) {
+  web.chat.postMessage({ channel: id, text: 'Hellooooo general!!!' })
+}
+
+getGeneralChatId().then(postToChannel);
