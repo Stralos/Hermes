@@ -1,6 +1,7 @@
 import * as schedule from 'node-schedule';
 import { WebClient } from '@slack/client';
 import SLACK_KEY from '../config/keys'
+import { User, Users, UsersLocal } from './models/users';
 
 const web = new WebClient(SLACK_KEY);
 
@@ -14,3 +15,7 @@ async function postToChannel(id: string) {
 }
 
 getGeneralChatId().then(postToChannel);
+
+
+const usersRepo = new UsersLocal()
+console.log("User by date", usersRepo.userByDate(new Date()), " additional stirng ");
