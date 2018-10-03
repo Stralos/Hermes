@@ -5,4 +5,5 @@ import MessageController from './controllers/MessageController';
 
 const rtm = new RTMClient(SLACK_KEY);
 rtm.start();
+
 rtm.on('message', new MessageController(rtm).sendMessage);

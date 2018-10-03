@@ -4,10 +4,8 @@
   "description": "office bot",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node ./src/index.ts",
-    "watch": "nodemon -e ts -w ./src -x npm run watch:serve",
-    "watch:serve": "ts-node --inspect src/index.ts",
+    "start": "ts-node ./src/index.ts --no-cache false",
+    "dev": "node --inspect -r ts-node/register ./src/index.ts",
     "build": "tsc"
   },
   "repository": {

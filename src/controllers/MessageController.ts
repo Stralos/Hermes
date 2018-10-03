@@ -1,7 +1,7 @@
 import { RTMClient } from '@slack/client';
 
 export default class Messinger {
-  private rtm :RTMClient
+  private readonly rtm :Readonly<RTMClient>
   private get botId(): string {
     return `<@${this.rtm.activeUserId}>`;
   }
@@ -17,6 +17,6 @@ export default class Messinger {
       return;
     }
 
-    this.rtm.sendMessage('Hi!', event.channel);
+    this.rtm.sendMessage('What is up man!!', event.channel);
   }
 }
