@@ -2,7 +2,7 @@
 import { RTMClient } from '@slack/client';
 import SLACK_KEY from '../config/keys'
 import MessageController from './controllers/MessageController';
-import { User, Users, UserLocal } from './models/users';
+import { User, Users, UsersLocal } from './models/users';
 
 const rtm = new RTMClient(SLACK_KEY);
 rtm.start();
