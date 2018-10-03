@@ -7,15 +7,15 @@ const web = new WebClient(SLACK_KEY);
 
 async function getGeneralChatId() {
   const result = await web.channels.list();
-  const { id } = (<any> result).channels.find((channel: any) => channel.name === 'general');
-  return id;
+  const { id, members } = (<any> result).channels.find((channel: any) => channel.name === 'general');
+  return { id, members };
 };
-async function postToChannel(id: string) {
-  web.chat.postMessage({ channel: id, text: 'Hellooooo general!!!' })
+
+async function postToChannel({ id, members }: { id: string, members: string[]}) {
+  web.chat.postMessage({ channel: id, text: `<@${members[2]}> needs to bring food next time!` })
 }
 
 getGeneralChatId().then(postToChannel);
-
 
 const usersRepo = new UsersLocal()
 console.log("User by date", usersRepo.userByDate(new Date()), " additional stirng ");
