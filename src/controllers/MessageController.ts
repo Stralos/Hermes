@@ -8,10 +8,10 @@ export default class Messinger {
 
   constructor(rtm: RTMClient) {
     this.rtm = rtm;
-    this.sendMessage = this.sendMessage.bind(this);
+    this.handleMessage = this.handleMessage.bind(this);
   }
 
-  public async sendMessage(event: any): Promise<void> {
+  public async handleMessage(event: any): Promise<void> {
     console.log(event);
     if (!event.text.includes(this.botId)) {
       return;
