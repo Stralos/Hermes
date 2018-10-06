@@ -5,6 +5,9 @@ describe('test', () => {
   it('has to work!', async () => {
     const a = new WebClient('key');
     const b = await a.conversations.list();
-    expect(b).toBe(1);
+    expect(b).toEqual({
+      ok: true,
+      channels: []
+    });
   })
 });
