@@ -1,5 +1,4 @@
 import { WebClient } from '@slack/client';
-
 jest.mock('@slack/client');
 
 describe('test', () => {
