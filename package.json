@@ -8,7 +8,9 @@
     "dev": "node --inspect -r ts-node/register ./src/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "build:trace": "tsc --traceResolution",
+    "tsc": "tsc --p tsconfig.json"
   },
   "repository": {
     "type": "git",

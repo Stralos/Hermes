@@ -10,7 +10,12 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "inlineSourceMap": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
+    "paths": {
+      "models/*": [ "src/models/*" ],
+      "config/*": [ "config/*"],
+      "repository/*": [ "src/repo/repository/*"]
+    },
     "target": "es6",
     "lib": ["es6", "dom", "esnext.asynciterable"],
     "strict": true,
