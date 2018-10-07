@@ -45,9 +45,16 @@ export default class BreakfastReminderScheduler {
         throw Error(`User [${breakfestUserName}] not found in slack users`);
       }
       const channel = await this.getChannelByName(ChannelNames.GENERAL);
+      
       this.web.chat.postMessage({ 
         channel: channel.id,
         text: `<@${breakfestUser.id}> needs to bring food next time!`
+      });
+
+      const breakfestUserChannel = await <any> this.web.im.open({ user: breakfestUser.id })
+      this.web.chat.postMessage({ 
+        channel: breakfestUserChannel.channel.id,
+        text: `Hey, <@${breakfestUser.id}>, you need to bring food for the next monday`
       });
     } catch(e) {
       console.log(e);
