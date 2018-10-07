@@ -4,13 +4,12 @@
   "description": "office bot",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node ./src/index.ts --no-cache false",
-    "dev": "node --inspect -r ts-node/register ./src/index.ts",
+    "start": "ts-node -r tsconfig-paths/register ./src/index.ts --no-cache false",
+    "dev": "node --inspect -r ts-node/register -r tsconfig-paths/register ./src/index.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "build": "tsc",
-    "build:trace": "tsc --traceResolution",
-    "tsc": "tsc --p tsconfig.json"
+    "build-trace": "tsc --traceResolution"
   },
   "repository": {
     "type": "git",
@@ -33,6 +32,7 @@
     "@types/node-schedule": "^1.2.2",
     "jest": "^23.6.0",
     "nodemon": "^1.18.4",
-    "ts-jest": "^23.10.3"
+    "ts-jest": "^23.10.3",
+    "tsconfig-paths": "^3.6.0"
   }
 }
