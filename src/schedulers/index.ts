@@ -1,5 +1,6 @@
 import * as schedule from 'node-schedule';
 import { WebClient } from '@slack/client';
+import WeekDays from 'models/WeekDays';
 import BreakfastReminder from './breakfastReminder';
 
 export default class Schedulers {
@@ -10,12 +11,9 @@ export default class Schedulers {
 
   public init() {
     schedule.scheduleJob(
-      new schedule.RecurrenceRule(
-        undefined, 
-        undefined, 
-        undefined, 
-        undefined, 
-        14,
+      new schedule.RecurrenceRule(undefined, undefined, undefined, 
+        [WeekDays.MONDAY, WeekDays.FRIDAY], 
+        11, 11, 0
       ),
       new BreakfastReminder(this.web).sendReminderForBreakfast
     );
