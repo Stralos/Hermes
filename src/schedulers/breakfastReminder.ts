@@ -3,6 +3,7 @@ import Members from 'models/members';
 import Member from 'models/member';
 import Channels from 'models/channels';
 import ChannelNames from 'models/channelNames';
+import WeekDays from 'models/WeekDays';
 import { WebClient, WebAPICallResult } from '@slack/client';
 import getBreakfastSchedule from 'utils/breakfastUsers';
 
@@ -15,6 +16,8 @@ export default class BreakfastReminderScheduler {
     this.getSlackMembers = this.getSlackMembers.bind(this);
     this.sendReminderForBreakfast = this.sendReminderForBreakfast.bind(this);
     this.getUserNameWhoNeedsToBringBreakfast = this.getUserNameWhoNeedsToBringBreakfast.bind(this);
+    this.getPersonalMessage = this.getPersonalMessage.bind(this);
+    this.getChatMessage = this.getChatMessage.bind(this);
   }
 
   private async getChannelByName(name: string) {
@@ -46,9 +49,22 @@ export default class BreakfastReminderScheduler {
     return nextPersonToBringBreakfast.name;
   }
 
+  private getChatMessage(): string {
+    return "";
+  }
+
+  private getPersonalMessage(userId: string): string {
+    if (moment().isoWeekday() === WeekDays.FRIDAY) {
+      return `Labas, <@${userId}>, primenu, kad ateinantį pirmadienį - tavo eilė atnešti pusryčius.`;
+    }
+
+    return `Labas, <@${userId}>, sekantį pirmadienį tavo eilė atnešti pusryčius`
+  }
+
 
   public async sendReminderForBreakfast(): Promise<void> {
     try {
+      debugger;
       const members = await this.getSlackMembers();
       const breakfastUserName = await this.getUserNameWhoNeedsToBringBreakfast();
       const breakfastUser = members.find(member => member.real_name === breakfastUserName);
@@ -61,11 +77,12 @@ export default class BreakfastReminderScheduler {
         channel: channel.id,
         text: `<@${breakfastUser.id}> needs to bring food next time!`
       });
+      
 
       const breakfestUserChannel = await <any> this.web.im.open({ user: breakfastUser.id })
       this.web.chat.postMessage({ 
         channel: breakfestUserChannel.channel.id,
-        text: `Hey, <@${breakfastUser.id}>, you need to bring food for the next monday`
+        text: this.getPersonalMessage(breakfastUser.id)
       });
     } catch(e) {
       console.log(e);
