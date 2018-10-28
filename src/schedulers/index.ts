@@ -17,7 +17,7 @@ export default class Schedulers {
       schedule.scheduleJob(
         new schedule.RecurrenceRule(undefined, undefined, undefined, 
           [WeekDays.MONDAY, WeekDays.FRIDAY], 
-          11, 11, 0
+          10, 0, 0
         ),
         new BreakfastReminder(this.web).sendReminderForBreakfast
       )

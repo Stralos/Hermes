@@ -37,7 +37,7 @@ export default class BreakfastReminderScheduler {
   }
 
   private async getUserNameWhoNeedsToBringBreakfast(): Promise<string> {
-    const nextMonday = moment().isoWeekday(1 + 7).format('YYYY/MM/DD');
+    const nextMonday = moment().isoWeekday(1 + 7).format('YYYY-MM-DD');
     const schedule = await getBreakfastSchedule();
 
     const nextPersonToBringBreakfast = schedule.find(time => moment(time.date).isSame(nextMonday));
@@ -49,8 +49,11 @@ export default class BreakfastReminderScheduler {
     return nextPersonToBringBreakfast.name;
   }
 
-  private getChatMessage(): string {
-    return "";
+  private getChatMessage(userId: string): string {
+    if (moment().isoWeekday() === WeekDays.FRIDAY) {
+      return `Primenu, kad sekantį pirmadienį yra <@${userId}> eilė pasirūpinti pusryčiais`;
+    }
+    return `Sekantį pirmadienį <@${userId}> eilė pasirūpinti pusryčiais.`
   }
 
   private getPersonalMessage(userId: string): string {
@@ -75,9 +78,8 @@ export default class BreakfastReminderScheduler {
       
       this.web.chat.postMessage({ 
         channel: channel.id,
-        text: `<@${breakfastUser.id}> needs to bring food next time!`
-      });
-      
+        text: this.getChatMessage(breakfastUser.id)
+      });      
 
       const breakfestUserChannel = await <any> this.web.im.open({ user: breakfastUser.id })
       this.web.chat.postMessage({ 
@@ -89,4 +91,3 @@ export default class BreakfastReminderScheduler {
     }
   }
 }
-
