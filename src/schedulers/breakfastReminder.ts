@@ -49,42 +49,71 @@ export default class BreakfastReminderScheduler {
     return nextPersonToBringBreakfast.name;
   }
 
-  private getChatMessage(userId: string): string {
+  private getChatMessage(userIdentifier: string): string {
     if (moment().isoWeekday() === WeekDays.FRIDAY) {
-      return `Primenu, kad sekantį pirmadienį yra <@${userId}> eilė pasirūpinti pusryčiais`;
+      return `Primenu, kad kitą pirmadienį yra ${userIdentifier} eilė pasirūpinti pusryčiais`;
     }
-    return `Sekantį pirmadienį <@${userId}> eilė pasirūpinti pusryčiais.`
+    return `Kitą pirmadienį ${userIdentifier} eilė pasirūpinti pusryčiais.`
   }
 
-  private getPersonalMessage(userId: string): string {
+  private getPersonalMessage(userIdentifier: string): string {
     if (moment().isoWeekday() === WeekDays.FRIDAY) {
-      return `Labas, <@${userId}>, primenu, kad ateinantį pirmadienį - tavo eilė atnešti pusryčius.`;
+      return `Labas, ${userIdentifier}, primenu, kad kitą pirmadienį - tavo eilė atnešti pusryčius.`;
     }
 
-    return `Labas, <@${userId}>, sekantį pirmadienį tavo eilė atnešti pusryčius`
+    return `Labas, ${userIdentifier}, kitą pirmadienį tavo eilė atnešti pusryčius`
   }
 
+  private static formatId(id: string): string {
+    return `<@${id}>`;
+  }
 
   public async sendReminderForBreakfast(): Promise<void> {
     try {
-      debugger;
-      const members = await this.getSlackMembers();
+      const channel = await this.getChannelByName(ChannelNames.GENERAL);
       const breakfastUserName = await this.getUserNameWhoNeedsToBringBreakfast();
+
+      if (!breakfastUserName.replace(/-/g, '').length) {
+        /**
+         * instead of a user name ---- was provided
+         * we will send a message that no one needs to bring food
+         * for the next week;
+         * We will send it just on monday to avoid spam.
+         */
+        if (moment().isoWeekday() === WeekDays.MONDAY) {
+          this.web.chat.postMessage({ 
+            channel: channel.id,
+            text: `Pagal sąrašą, kitą pirmadienį pusryčių nebus. Gerų švenčių !`,
+          });
+        }        
+        return;
+      }
+
+      const members = await this.getSlackMembers();
       const breakfastUser = members.find(member => member.real_name === breakfastUserName);
-      if (breakfastUser == null) {
+
+      if (breakfastUser == null) { 
+        /* we where not able to map user real name
+        ** with slack, so we will send the message to general
+        ** using the provided user name.
+        */
+        this.web.chat.postMessage({ 
+          channel: channel.id,
+          text: this.getChatMessage(breakfastUserName)
+        });
+
         throw Error(`User [${breakfastUserName}] not found in slack users`);
       }
-      const channel = await this.getChannelByName(ChannelNames.GENERAL);
       
       this.web.chat.postMessage({ 
         channel: channel.id,
-        text: this.getChatMessage(breakfastUser.id)
+        text: this.getChatMessage(BreakfastReminderScheduler.formatId(breakfastUser.id))
       });      
 
       const breakfestUserChannel = await <any> this.web.im.open({ user: breakfastUser.id })
       this.web.chat.postMessage({ 
         channel: breakfestUserChannel.channel.id,
-        text: this.getPersonalMessage(breakfastUser.id)
+        text: this.getPersonalMessage(BreakfastReminderScheduler.formatId(breakfastUser.id))
       });
     } catch(e) {
       console.log(e);
