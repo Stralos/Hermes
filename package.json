@@ -37,7 +37,6 @@
     "@types/node-fetch": "^2.1.2",
     "@types/node-schedule": "^1.2.2",
     "jest": "^23.6.0",
-    "nodemon": "^1.18.4",
     "ts-jest": "^23.10.3",
     "tsconfig-paths": "^3.6.0"
   }
